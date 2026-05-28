@@ -1,13 +1,8 @@
 *
 
 !.gitignore
-!.clasp.json
-!bizinfo_datalist.py
-!apps_script/
-!apps_script/**
-!bizinfo_collector/
-!bizinfo_collector/**
-!*.md
+!bizinfo_crawling/
+!bizinfo_crawling/**
 
 __pycache__/
 *.pyc
@@ -15,3 +10,4 @@ __pycache__/
 *.pyd
 downloads/
 key.json
+.gitconfig_codex
