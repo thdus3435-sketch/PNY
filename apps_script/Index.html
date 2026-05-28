@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      margin: 0;
+      background: #f3f6fb;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 36px;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 26px;
+      border-bottom: 1px solid #d7e0ef;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .tab {
+      padding: 0 0 12px;
+      color: #667085;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: #2563eb;
+      border-bottom: 3px solid #2563eb;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 20px;
+    }
+
+    .keyword-section {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .keyword-cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .keyword-card {
+      min-height: 88px;
+      border: 1px solid #dbe5f3;
+      border-radius: 14px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      cursor: pointer;
+      transition: 0.15s ease;
+      position: relative;
+    }
+
+    .keyword-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .keyword-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .keyword-name {
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+      flex: 1;
+    }
+
+    .keyword-status {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex: 0 0 8px;
+      margin-top: 4px;
+      background: #9ca3af;
+      padding: 0;
+    }
+
+    .dot.matched {
+      background: #ef4444;
+    }
+
+    .dot.unmatched {
+      background: #9ca3af;
+    }
+
+.regular-card-wrap {
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  gap: 10px;
+  align-items: center;
+}
+
+.regular-arrow-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d7e0ef;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.regular-arrow-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.regular-arrow-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  color: #94a3b8;
+}
+
+.regular-page-info {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #64748b;
+}
+
+    .regular-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .regular-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .regular-list-item:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.10);
+      transform: translateY(-1px);
+    }
+
+    .regular-list-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .regular-list-main {
+      min-width: 0;
+    }
+
+    .regular-list-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #111827;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .regular-list-meta {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .regular-list-status {
+      flex-shrink: 0;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .regular-list-status.is-matched {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .regular-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .regular-page-btn {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #d1d5db;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #111827;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .regular-page-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .regular-page-info {
+      font-size: 12px;
+      font-weight: 800;
+      color: #6b7280;
+      min-width: 42px;
+      text-align: center;
+    }
+
+    .filter-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: end;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #667085;
+      margin-bottom: 6px;
+    }
+
+    select, input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid #d7e0ef;
+      border-radius: 10px;
+      padding: 0 10px;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    .apply-btn {
+      height: 38px;
+      border: none;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      height: 38px;
+      border: 1px solid #d7e0ef;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #334155;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0 12px;
+    }
+
+    .list-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .notice-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    .notice-table th {
+      color: #64748b;
+      font-weight: 800;
+      text-align: center;
+      padding: 12px 8px;
+      border-bottom: 1px solid #e5ebf5;
+      white-space: nowrap;
+    }
+
+    .notice-table td {
+      padding: 14px 8px;
+      border-bottom: 1px solid #eef2f8;
+      vertical-align: middle;
+      word-break: keep-all;
+    }
+
+    tr.notice-row {
+      cursor: pointer;
+    }
+
+    tr.notice-row:hover {
+      background: #f8fbff;
+    }
+
+    .col-grade {
+      width: 44px;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .col-score {
+      width: 48px;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .col-status {
+      width: 64px;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    .col-apply-status {
+      width: 68px;
+      min-width: 68px;
+      text-align: center;
+    }
+
+    .col-title {
+      width: 58%;
+      min-width: 620px;
+      line-height: 1.45;
+    }
+
+    .col-ministry {
+      width: 105px;
+      min-width: 105px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .col-date {
+      width: 95px;
+      min-width: 95px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .col-period {
+      width: 115px;
+      min-width: 115px;
+      font-size: 13px;
+      line-height: 1.3;
+      white-space: normal;
+      word-break: keep-all;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      background: #eef4ff;
+      color: #2563eb;
+      white-space: nowrap;
+    }
+
+    .apply-status-badge {
+      display: inline-block;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .notice-table td.col-title,
+    .notice-table th.col-title {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .notice-table td.col-title b {
+      display: block;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .apply-status-open {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .apply-status-ready {
+      background: #fef9c3;
+      color: #a16207;
+    }
+
+    .apply-status-closed {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .apply-status-check {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .grade-badge {
+      display: inline-block;
+      width: 28px;
+      height: 24px;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 24px;
+      font-weight: 800;
+      color: #fff;
+      background: #64748b;
+    }
+
+    .grade-S { background: #1d4ed8; }
+    .grade-A { background: #16a34a; }
+    .grade-B { background: #ca8a04; }
+    .grade-C { background: #7c3aed; }
+    .grade-D { background: #64748b; }
+
+    .sortable-th {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .th-sort-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .sort-btns {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-left: 2px;
+    }
+
+    .sort-mini-btn {
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 9px;
+      line-height: 9px;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .sort-mini-btn:hover {
+      color: #2563eb;
+    }
+
+    .sort-mini-btn.active {
+      color: #1d4ed8;
+      font-weight: 900;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .page-btn {
+      border: 1px solid #d7e0ef;
+      background: #ffffff;
+      color: #334155;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 700;
+      min-width: 54px;
+      text-align: center;
+    }
+
+    .side-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      margin-bottom: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .summary-row b {
+      color: #111827;
+    }
+
+    .log-item {
+      border-left: 3px solid #93c5fd;
+      padding-left: 10px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #475569;
+    }
+
+    .top-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .back-btn {
+      border: none;
+      background: #eef4ff;
+      color: #1d4ed8;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 18px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #e8f1ff;
+      color: #1d4ed8;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .badge.gray {
+      background: #eef0f3;
+      color: #4b5563;
+    }
+
+    .notice-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 16px 0 14px;
+      line-height: 1.4;
+    }
+
+    .origin-btn {
+      border: none;
+      background: #3b82f6;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .origin-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .download-origin-btn {
+      border: none;
+      background: #0f766e;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .download-origin-btn.disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .drive-save-btn {
+      border: none;
+      background: #7c3aed;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .drive-save-btn.disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .ai-box {
+      background: #dbeafe;
+      border: 2px solid #93c5fd;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .ai-title {
+      font-weight: 800;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .info-card, .status-card, .detail-card, .attachment-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .attachment-card {
+      margin-bottom: 18px;
+    }
+
+    .attachment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .attachment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #e5ebf5;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #f8fbff;
+    }
+
+    .attachment-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.45;
+      word-break: break-all;
+    }
+
+    .download-btn {
+      flex: 0 0 auto;
+      border: none;
+      border-radius: 9px;
+      padding: 8px 12px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .download-btn.disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .attachment-empty {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .label {
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .value {
+      color: #111827;
+      white-space: pre-wrap;
+    }
+
+    .status-btn {
+      width: 100%;
+      border: 1px solid #d8e0ec;
+      border-radius: 10px;
+      padding: 11px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      background: #ffffff;
+    }
+
+    .status-btn.review { background: #fff7ed; color: #c2410c; }
+    .status-btn.drop { background: #f8fafc; color: #475569; }
+    .status-btn.confirm { background: #dcfce7; color: #15803d; }
+    .status-btn.none { background: #f1f5f9; color: #475569; }
+
+    .detail-box {
+      min-height: 160px;
+      border: 2px solid #9ca3af;
+      border-radius: 8px;
+      padding: 22px;
+      background: #f9fafb;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .notice-preview-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .preview-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px solid #d0d7e2;
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      background: #f8fafc;
+    }
+
+    .preview-file-name {
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: #111827;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .preview-link-btn {
+      border: 1px solid #d7e0ef;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #2563eb;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .notice-preview-frame {
+      width: 100%;
+      height: 860px;
+      border: 1px solid #d0d7e2;
+      border-radius: 0 0 10px 10px;
+      background: #f8fafc;
+    }
+
+    .preview-fallback-box {
+      min-height: 160px;
+      border: 1px solid #d0d7e2;
+      border-radius: 10px;
+      padding: 24px;
+      background: #f9fafb;
+      color: #475569;
+      line-height: 1.7;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .preview-fallback-title {
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .empty-box {
+      padding: 36px;
+      text-align: center;
+      color: #64748b;
+      background: #ffffff;
+      border-radius: 18px;
+    }
+
+    .loading {
+      padding: 36px;
+      text-align: center;
+      color: #64748b;
+      background: #ffffff;
+      border-radius: 18px;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .keyword-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .col-title {
+        min-width: auto;
+      }
+
+      .attachment-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="title" id="pageTitle">고객지원사업</div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="goList()">신규 고객지원사업</div>
+      <div class="tab" onclick="goList()">고객지원사업 관리</div>
+    </div>
+
+    <div id="app" class="loading">불러오는 중...</div>
+  </div>
+
+  <script>
+    const NOTICE_ID = "<?= noticeId ?>";
+    const WEB_APP_URL = "<?= webAppUrl ?>";
+    const PAGE_SIZE = 10;
+
+    let regularCardsAll = [];
+    let regularPage = 1;
+    const REGULAR_PAGE_SIZE = 5;
+    
+    let CURRENT_PAGE = 1;
+    let CURRENT_NOTICE_LIST = [];
+    let CURRENT_SORT = "score_desc";
+    let LAST_LIST_PAYLOAD = null;
+    let CURRENT_DETAIL_NOTICE = null;
+
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return "";
+
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeJs(text) {
+      if (text === null || text === undefined) return "";
+
+      return String(text)
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll('"', '\\"')
+        .replaceAll("\n", " ")
+        .replaceAll("\r", " ");
+    }
+
+    function goDetail(id) {
+      const noticeId = String(id || "").trim();
+
+      if (!noticeId) {
+        alert("공고ID가 없어 상세 화면으로 이동할 수 없습니다.");
+        return;
+      }
+
+      document.getElementById("app").className = "loading";
+      document.getElementById("app").innerHTML = "상세 정보를 불러오는 중...";
+
+      google.script.run
+        .withSuccessHandler(data => {
+          if (!data) {
+            document.getElementById("app").className = "";
+            document.getElementById("app").innerHTML = `
+              <div class="empty-box">공고를 찾을 수 없습니다.</div>
+            `;
+            return;
+          }
+
+          if (window.history && window.history.pushState) {
+            window.history.pushState(
+            {
+              page: "detail",
+              noticeId: noticeId
+            },
+            "",
+            "?id=" + encodeURIComponent(noticeId)
+          );
+          }
+
+          renderDetail(data);
+        })
+        .withFailureHandler(err => {
+          renderError(err.message);
+        })
+        .getNoticeDetail(noticeId);
+    }
+
+    function goList() {
+      document.getElementById("pageTitle").textContent = "고객지원사업";
+      document.getElementById("app").className = "loading";
+      document.getElementById("app").innerHTML = "불러오는 중...";
+
+      // 상세 URL의 ?id=... 제거
+      // 목록 복귀는 새 히스토리를 추가하지 않고 현재 상세 히스토리를 목록으로 교체
+      if (window.history && window.history.replaceState) {
+        try {
+          const cleanUrl = window.location.origin + window.location.pathname;
+
+          window.history.replaceState(
+            {
+              page: "list"
+            },
+            "",
+            cleanUrl
+          );
+        } catch (e) {
+          console.log("목록 URL 정리 실패:", e.message);
+        }
+      }
+
+      LAST_LIST_PAYLOAD = null;
+
+      google.script.run
+        .withSuccessHandler(renderList)
+        .withFailureHandler(err => {
+          renderError(err.message);
+        })
+        .getNoticeList();
+    }
+
+    function getText(v) {
+      return v === null || v === undefined || v === "" ? "-" : v;
+    }
+
+    function normalizeStatus(status) {
+      const st = String(status || "").trim();
+
+      if (!st) return "신규";
+      if (st === "상태미선택") return "상태 미선택";
+
+      return st;
+    }
+
+    function getApplyStatusClass(status) {
+      const st = String(status || "").trim();
+
+      if (st === "접수중") return "apply-status-open";
+      if (st === "접수예정" || st === "접수개시(예정)") return "apply-status-ready";
+      if (st === "마감" || st === "접수마감") return "apply-status-closed";
+
+      return "apply-status-check";
+    }
+
+    function gradeRank(grade) {
+      const order = { S: 5, A: 4, B: 3, C: 2, D: 1 };
+      return order[String(grade || "D").trim()] || 0;
+    }
+
+    function toNumber(value) {
+      const n = Number(String(value || "0").replaceAll(",", "").trim());
+      return Number.isNaN(n) ? 0 : n;
+    }
+
+    function parseDateValue(value) {
+      const text = String(value || "").trim();
+      const match = text.match(/(20\d{2})[-./](\d{1,2})[-./](\d{1,2})/);
+
+      if (!match) return 0;
+
+      const y = Number(match[1]);
+      const m = Number(match[2]) - 1;
+      const d = Number(match[3]);
+
+      return new Date(y, m, d).getTime();
+    }
+
+    function getApplyStartDateValue(notice) {
+      return parseDateValue(notice.신청기간 || "");
+    }
+
+    function sortNotices(notices) {
+      const sorted = [...(notices || [])];
+
+      sorted.sort((a, b) => {
+        switch (CURRENT_SORT) {
+          case "score_desc":
+            return toNumber(b.적합도점수) - toNumber(a.적합도점수);
+
+          case "score_asc":
+            return toNumber(a.적합도점수) - toNumber(b.적합도점수);
+
+          case "grade_desc":
+            return gradeRank(b.적합도등급) - gradeRank(a.적합도등급);
+
+          case "grade_asc":
+            return gradeRank(a.적합도등급) - gradeRank(b.적합도등급);
+
+          case "notice_date_asc":
+            return parseDateValue(a.공고일) - parseDateValue(b.공고일);
+
+          case "notice_date_desc":
+            return parseDateValue(b.공고일) - parseDateValue(a.공고일);
+
+          case "apply_start_asc":
+            return getApplyStartDateValue(a) - getApplyStartDateValue(b);
+
+          case "apply_start_desc":
+            return getApplyStartDateValue(b) - getApplyStartDateValue(a);
+
+          case "deadline_asc":
+            return parseDateValue(a.마감일) - parseDateValue(b.마감일);
+
+          case "deadline_desc":
+            return parseDateValue(b.마감일) - parseDateValue(a.마감일);
+
+          default:
+            return toNumber(b.적합도점수) - toNumber(a.적합도점수);
+        }
+      });
+
+      return sorted;
+    }
+
+    function setSort(sortKey) {
+      CURRENT_SORT = sortKey;
+      CURRENT_NOTICE_LIST = sortNotices(CURRENT_NOTICE_LIST);
+      CURRENT_PAGE = 1;
+      renderCurrentPage();
+    }
+
+    function isSortActive(sortKey) {
+      return CURRENT_SORT === sortKey ? "active" : "";
+    }
+
+    function normalizeAttachmentName(name) {
+      let text = String(name || "").trim();
+
+      if (!text) return "첨부파일";
+
+      const lines = text
+        .split(/\n|\\n/g)
+        .map(v => v.trim())
+        .filter(Boolean)
+        .filter(v => !/^\d+$/.test(v))
+        .filter(v => v !== "공고 첨부파일")
+        .filter(v => v !== "첨부파일")
+        .filter(v => v !== "파일 등록 일자")
+        .filter(v => v !== "항목")
+        .filter(v => v !== "순번");
+
+      const fileLine = lines.find(v =>
+        /\.(pdf|hwp|hwpx|zip|xlsx?|docx?|pptx?)$/i.test(v)
+      );
+
+      if (fileLine) return fileLine;
+
+      return lines.length ? lines[lines.length - 1] : text.replace(/\n/g, " ");
+    }
+
+    function parseAttachments(raw) {
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+
+        if (Array.isArray(parsed)) {
+          return parsed
+            .map(item => ({
+              name: normalizeAttachmentName(item.name || item.file_name || item.filename || "첨부파일"),
+              url: String(item.url || item.download_url || item.href || "").trim()
+            }))
+            .filter(item => item.name);
+        }
+      } catch (e) {}
+
+      return String(raw)
+        .split(/\n/g)
+        .map(v => v.trim())
+        .filter(Boolean)
+        .map(line => ({
+          name: normalizeAttachmentName(line),
+          url: ""
+        }));
+    }
+
+    function getFirstAttachment(data) {
+      const attachments = parseAttachments(data && data.첨부파일);
+
+      if (!attachments.length) {
+        return { name: "", url: "" };
+      }
+
+      return attachments[0];
+    }
+
+    function isNoticeDocumentAttachment(fileName) {
+      const text = String(fileName || "").toLowerCase();
+
+      if (!text) return false;
+
+      const noticeKeywords = [
+        "꽁고문",
+        "공고문",
+        "모집공고",
+        "공고"
+      ];
+
+      return noticeKeywords.some(keyword => text.includes(keyword));
+    }
+
+    function getNoticeDocumentAttachments(rawAttachments) {
+      return parseAttachments(rawAttachments)
+        .filter(file => isNoticeDocumentAttachment(file.name));
+    }
+
+    function getValidNoticeDocumentAttachments(rawAttachments) {
+      return getNoticeDocumentAttachments(rawAttachments)
+        .filter(file => isValidAttachmentUrl(file.url));
+    }
+
+    function getNoticeDocumentAttachment(data) {
+      const attachments = getNoticeDocumentAttachments(data && data.첨부파일);
+
+      if (!attachments.length) {
+        return { name: "", url: "" };
+      }
+
+      return attachments[0];
+    }
+
+    function isValidAttachmentUrl(url) {
+      const cleanUrl = String(url || "").trim();
+      if (!cleanUrl) return false;
+
+      const lower = cleanUrl.toLowerCase();
+
+      const blocked = [
+        "blob:",
+        "data:",
+        "javascript:",
+        ".js",
+        ".css",
+        ".map",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        "webpack",
+        "chunk",
+        "runtime",
+        "bundle",
+        "loader",
+        "crypto-js",
+        "jszip",
+        "react",
+        "static/js",
+        "static/css",
+        "/assets/"
+      ];
+
+      if (blocked.some(v => lower.includes(v))) {
+        return false;
+      }
+
+      const allowedExt = [
+        ".pdf", ".hwp", ".hwpx", ".zip",
+        ".xls", ".xlsx", ".doc", ".docx",
+        ".ppt", ".pptx"
+      ];
+
+      if (allowedExt.some(ext => lower.includes(ext))) {
+        return true;
+      }
+
+      const downloadTokens = [
+        "download",
+        "downfile",
+        "filedown",
+        "filedownload",
+        "atchfile",
+        "attachfile",
+        "cmmnfile",
+        "cmnfile"
+      ];
+
+      return downloadTokens.some(v => lower.includes(v));
+    }
+
+
+
+    function extractFirstUrlFromText(text) {
+      const match = String(text || "").match(/https?:\/\/[^\s|]+/);
+      return match ? match[0].trim() : "";
+    }
+
+    function isPdfUrl(url) {
+      const cleanUrl = String(url || "").trim().toLowerCase();
+      return cleanUrl.includes(".pdf") || cleanUrl.includes("pdf");
+    }
+
+    function getPreviewTarget(data) {
+      const detailUrl = String((data && data.상세링크) || "").trim();
+      const noteUrl = extractFirstUrlFromText(data && data.비고);
+
+      // 중요:
+      // 첨부파일 URL은 자동 iframe 미리보기 대상에서 제외
+      // 다운로드 링크가 iframe에 들어가면 상세 진입 시 자동 다운로드될 수 있음
+      if (detailUrl) {
+        return {
+          type: "origin",
+          name: "원본 공고 페이지",
+          url: detailUrl
+        };
+      }
+
+      if (noteUrl) {
+        return {
+          type: "origin",
+          name: "원문 링크",
+          url: noteUrl
+        };
+      }
+
+      return {
+        type: "none",
+        name: "",
+        url: ""
+      };
+    }
+
+    function buildPreviewSrc(target) {
+      const url = String(target && target.url || "").trim();
+
+      if (!url) return "";
+
+      // 첨부파일 다운로드 URL이 아니라 원본 공고 상세 페이지 URL만 iframe에 표시
+      return url;
+    }
+
+    function renderNoticePreviewBox(data) {
+      const target = getPreviewTarget(data);
+      const previewSrc = buildPreviewSrc(target);
+      const fallbackText = data && data.비고
+        ? data.비고
+        : "상세 공고문은 원본 공고문 바로 보기 버튼을 통해 확인할 수 있습니다.";
+
+      if (!previewSrc) {
+        return `
+          <div class="notice-preview-card">
+            <div class="section-title">상세 공고 내용</div>
+            <div class="preview-fallback-box">
+              <div class="preview-fallback-title">미리보기 가능한 링크가 없습니다.</div>
+              ${escapeHtml(fallbackText)}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="notice-preview-card">
+          <div class="section-title">상세 공고 내용</div>
+
+          <div class="preview-toolbar">
+            <div class="preview-file-name">${escapeHtml(target.name || "공고문 미리보기")}</div>
+
+            <div class="preview-actions">
+              <a class="preview-link-btn" href="${escapeHtml(previewSrc)}" target="_blank" rel="noopener">
+                새 탭에서 열기
+              </a>
+            </div>
+          </div>
+
+          <iframe
+            class="notice-preview-frame"
+            src="${escapeHtml(previewSrc)}"
+            loading="lazy"
+          ></iframe>
+
+          <div style="margin-top:8px; font-size:12px; color:#64748b; line-height:1.5;">
+            원본 사이트 정책에 따라 미리보기가 표시되지 않을 수 있습니다. 이 경우 '새 탭에서 열기' 또는 '원본 공고문 바로 보기'를 이용해주세요.
+          </div>
+        </div>
+      `;
+    }
+
+
+    function getValidAttachments(rawAttachments) {
+      return parseAttachments(rawAttachments).filter(file => isValidAttachmentUrl(file.url));
+    }
+
+    function hasValidAttachmentUrl(rawAttachments) {
+      return getValidAttachments(rawAttachments).length > 0;
+    }
+
+    function hasValidNoticeDocumentAttachmentUrl(rawAttachments) {
+      return getValidNoticeDocumentAttachments(rawAttachments).length > 0;
+    }
+
+    function saveAttachmentsToDrive() {
+      if (!CURRENT_DETAIL_NOTICE || !CURRENT_DETAIL_NOTICE["공고ID"]) {
+        alert("공고 정보가 없습니다.");
+        return;
+      }
+
+      const validAttachments = getValidNoticeDocumentAttachments(CURRENT_DETAIL_NOTICE["첨부파일"]);
+
+      if (!validAttachments.length) {
+        alert(
+          "저장 가능한 공고문 다운로드 URL이 없습니다.\n\n" +
+          "공고문 URL이 비어 있거나 유효하지 않은 경우 Drive 저장을 할 수 없습니다.\n" +
+          "원본 공고문 바로 보기에서 첨부파일을 확인해주세요."
+        );
+        return;
+      }
+
+      if (!confirm("해당 공고의 공고문 첨부파일만 구글 드라이브에 저장하시겠습니까?")) {
+        return;
+      }
+
+      const btn = document.getElementById("driveSaveBtn");
+      const originalText = btn ? btn.textContent : "";
+
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add("disabled");
+        btn.textContent = "Drive 저장 중...";
+      }
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove("disabled");
+            btn.textContent = originalText || "공고문 Drive 저장";
+          }
+
+          const savedFiles = result && result.savedFiles ? result.savedFiles : [];
+          const failedFiles = result && result.failedFiles ? result.failedFiles : [];
+
+          let message = "Drive 저장 완료\n\n";
+          message += "저장 성공: " + savedFiles.length + "건\n";
+          message += "저장 실패: " + failedFiles.length + "건";
+
+          if (failedFiles.length) {
+            message += "\n\n실패 내역:";
+            failedFiles.slice(0, 5).forEach(function(file) {
+              message += "\n- " + (file.name || "첨부파일") + ": " + (file.reason || "실패");
+            });
+          }
+
+          alert(message);
+
+          if (result && result.folderUrl) {
+            window.open(result.folderUrl, "_blank");
+          }
+        })
+        .withFailureHandler(function(error) {
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove("disabled");
+            btn.textContent = originalText || "공고문 Drive 저장";
+          }
+
+          alert("Drive 저장 실패: " + error.message);
+        })
+        .saveNoticeAttachmentsToDrive(CURRENT_DETAIL_NOTICE["공고ID"]);
+    }
+
+    function downloadAttachment(url, fileName) {
+      const cleanUrl = String(url || "").trim();
+
+      if (!isValidAttachmentUrl(cleanUrl)) {
+        alert(
+          "다운로드 링크가 유효하지 않아 바로 다운로드할 수 없습니다.\n\n" +
+          "파일명: " + (fileName || "첨부파일") + "\n\n" +
+          "원본 공고문 바로 보기에서 첨부파일을 다운로드해주세요."
+        );
+        return;
+      }
+
+      window.open(cleanUrl, "_blank");
+    }
+
+    function renderAttachmentBox(rawAttachments) {
+      const attachments = parseAttachments(rawAttachments);
+
+      if (!attachments.length) {
+        return `
+          <div class="attachment-card">
+            <div class="section-title">첨부파일</div>
+            <div class="attachment-empty">등록된 첨부파일 정보가 없습니다.</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="attachment-card">
+          <div class="section-title">첨부파일</div>
+          <div class="attachment-list">
+            ${attachments.map(file => {
+              const hasUrl = isValidAttachmentUrl(file.url);
+              const isNoticeDocument = isNoticeDocumentAttachment(file.name);
+              const canDownload = hasUrl && isNoticeDocument;
+              const btnClass = canDownload ? "download-btn" : "download-btn disabled";
+              const btnText = canDownload
+                ? "공고문 다운로드"
+                : (isNoticeDocument ? "다운로드 불가" : "공고문만 다운로드");
+
+              return `
+                <div class="attachment-item">
+                  <div class="attachment-name">${escapeHtml(file.name)}</div>
+                  <button
+                    class="${btnClass}"
+                    onclick="${canDownload ? `downloadAttachment('${escapeJs(file.url)}', '${escapeJs(file.name)}')` : "return false;"}"
+                  >
+                    ${btnText}
+                  </button>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderList(payload) {
+      LAST_LIST_PAYLOAD = payload;
+      document.getElementById("pageTitle").textContent = "고객지원사업";
+
+      const notices = payload.notices || [];
+      const summary = payload.summary || {};
+      regularCardsAll = [...(payload.regularCards || [])].sort((a, b) => {
+      const aMatched = a.등록여부 === "Y" ? 1 : 0;
+      const bMatched = b.등록여부 === "Y" ? 1 : 0;
+
+      // 1순위: 빨간점(Y) 먼저
+      if (bMatched !== aMatched) {
+        return bMatched - aMatched;
+      }
+
+      // 2순위: 매칭 공고 수 많은 순
+      return Number(b.매칭건수 || 0) - Number(a.매칭건수 || 0);
+    });
+      regularPage = 1;
+
+      window.__ALL_NOTICES__ = notices;
+
+      document.getElementById("app").className = "";
+      document.getElementById("app").innerHTML = `
+        <div class="dashboard-grid">
+          <div>
+            <div class="keyword-section">
+              <div class="section-title">정기 모니터링 사업</div>
+              <div id="regularCardsArea"></div>
+            </div>
+
+            <div class="filter-box">
+              <div class="filters">
+                <div>
+                  <div class="filter-label">지역 필터</div>
+                  <select id="regionFilter">
+                    <option value="">전체 지역</option>
+                    <option value="대구">대구</option>
+                    <option value="경북">경북</option>
+                    <option value="경남">경남</option>
+                    <option value="부산">부산</option>
+                    <option value="전북">전북</option>
+                    <option value="전남">전남</option>
+                    <option value="충북">충북</option>
+                    <option value="충남">충남</option>
+                    <option value="경기">경기</option>
+                    <option value="서울">서울</option>
+                    <option value="인천">인천</option>
+                    <option value="광주">광주</option>
+                    <option value="강원">강원</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="filter-label">부처 필터</div>
+                  <select id="ministryFilter">
+                    <option value="">전체 부처</option>
+                    <option value="중소벤처기업부">중기부</option>
+                    <option value="산업통상부">산업부</option>
+                    <option value="과학기술정보통신부">과기부</option>
+                    <option value="지식재산처">지식재산처</option>
+                    <option value="중기부">중기부 표기</option>
+                    <option value="산업부">산업부 표기</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="filter-label">등급 필터</div>
+                  <select id="gradeFilter">
+                    <option value="">전체 등급</option>
+                    <option value="S">S</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="filter-label">진행상태</div>
+                  <select id="statusFilter">
+                    <option value="">전체</option>
+                    <option value="신규">신규</option>
+                    <option value="검토요청">검토요청</option>
+                    <option value="미진행">미진행</option>
+                    <option value="진행확정">진행확정</option>
+                    <option value="상태 미선택">상태 미선택</option>
+                  </select>
+                </div>
+
+                <button class="apply-btn" onclick="applyFilter()">필터 적용</button>
+              </div>
+            </div>
+
+            <div class="list-card">
+              <div class="list-header">
+                <div class="section-title">신규 공고 목록</div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <button class="reset-btn" onclick="resetFilter()">전체보기</button>
+                  <div style="font-size:13px; color:#64748b;">총 <span id="visibleCount">${payload.total || 0}</span>건</div>
+                </div>
+              </div>
+
+              <table class="notice-table">
+                <thead>
+                  <tr>
+                    <th class="col-grade sortable-th">
+                      <span class="th-sort-wrap">
+                        등급
+                        <span class="sort-btns">
+                          <button class="sort-mini-btn ${isSortActive("grade_desc")}" onclick="event.stopPropagation(); setSort('grade_desc')">▲</button>
+                          <button class="sort-mini-btn ${isSortActive("grade_asc")}" onclick="event.stopPropagation(); setSort('grade_asc')">▼</button>
+                        </span>
+                      </span>
+                    </th>
+
+                    <th class="col-score sortable-th">
+                      <span class="th-sort-wrap">
+                        점수
+                        <span class="sort-btns">
+                          <button class="sort-mini-btn ${isSortActive("score_desc")}" onclick="event.stopPropagation(); setSort('score_desc')">▲</button>
+                          <button class="sort-mini-btn ${isSortActive("score_asc")}" onclick="event.stopPropagation(); setSort('score_asc')">▼</button>
+                        </span>
+                      </span>
+                    </th>
+
+                    <th class="col-status">진행상태</th>
+                    <th class="col-apply-status">접수상태</th>
+                    <th class="col-title">지원사업명</th>
+                    <th class="col-ministry">소관부처</th>
+
+                    <th class="col-date sortable-th">
+                      <span class="th-sort-wrap">
+                        공고일
+                        <span class="sort-btns">
+                          <button class="sort-mini-btn ${isSortActive("notice_date_desc")}" onclick="event.stopPropagation(); setSort('notice_date_desc')">▲</button>
+                          <button class="sort-mini-btn ${isSortActive("notice_date_asc")}" onclick="event.stopPropagation(); setSort('notice_date_asc')">▼</button>
+                        </span>
+                      </span>
+                    </th>
+
+                    <th class="col-period sortable-th">
+                      <span class="th-sort-wrap">
+                        신청기간
+                        <span class="sort-btns">
+                          <button class="sort-mini-btn ${isSortActive("apply_start_desc")}" onclick="event.stopPropagation(); setSort('apply_start_desc')">▲</button>
+                          <button class="sort-mini-btn ${isSortActive("apply_start_asc")}" onclick="event.stopPropagation(); setSort('apply_start_asc')">▼</button>
+                        </span>
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="noticeTableBody"></tbody>
+              </table>
+
+              <div class="pagination">
+                <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">이전</button>
+                <span class="page-info" id="pageInfo">1 / 1</span>
+                <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">다음</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="side-card">
+              <div class="section-title">오늘 업데이트 요약</div>
+              <div class="summary-row"><span>신규 공고 수</span><b>${payload.total || 0}건</b></div>
+              <div class="summary-row"><span>검토요청 공고</span><b>${summary.검토요청 || 0}건</b></div>
+              <div class="summary-row"><span>미진행 처리</span><b>${summary.미진행 || 0}건</b></div>
+              <div class="summary-row"><span>진행확정</span><b>${summary.진행확정 || 0}건</b></div>
+            </div>
+
+            <div class="side-card">
+              <div class="section-title">진행상태 기준 안내</div>
+              <div class="log-item">신규: 진행상태가 비어 있거나 신규로 저장된 공고</div>
+              <div class="log-item">검토요청: 상세 화면에서 캘린더 등록 버튼을 클릭한 공고</div>
+              <div class="log-item">미진행: 상세 화면에서 미진행 버튼을 클릭한 공고</div>
+              <div class="log-item">진행확정: 상세 화면에서 진행확정 버튼을 클릭한 공고</div>
+            </div>
+
+            <div class="side-card">
+              <div class="section-title">최근 진행상태 변경 로그</div>
+              <div class="log-item">상세 화면에서 진행상태 변경 시 상태변경로그 시트에 기록됩니다.</div>
+              <div class="log-item">진행확정 공고는 고객지원사업 관리 대상으로 연계 가능합니다.</div>
+              <div class="log-item">정기 모니터링 사업의 빨간 점은 신규공고와 매칭된 정기지원 사업을 의미합니다.</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      setNoticeList(notices);
+      renderRegularCardsPaged();
+    }
+
+    function renderRegularCardsPaged() {
+  const container = document.getElementById("regularCardsArea");
+
+  if (!container) return;
+
+  if (!regularCardsAll || regularCardsAll.length === 0) {
+    container.innerHTML = `
+      <div class="empty-box">정기지원(수정금지) 시트에 등록된 사업이 없습니다.</div>
+    `;
+    return;
+  }
+
+  const totalPages = Math.ceil(regularCardsAll.length / REGULAR_PAGE_SIZE);
+  const startIndex = (regularPage - 1) * REGULAR_PAGE_SIZE;
+  const endIndex = startIndex + REGULAR_PAGE_SIZE;
+  const pageItems = regularCardsAll.slice(startIndex, endIndex);
+
+  const cardsHtml = pageItems.map(card => `
+    <div class="keyword-card" onclick="filterByRegularKeyword('${escapeJs(card.대표공고명)}', '${escapeJs(card.키워드패턴)}')">
+      <div class="keyword-head">
+        <div class="keyword-name">${escapeHtml(getText(card.대표공고명))}</div>
+        <span class="dot ${card.등록여부 === "Y" ? "matched" : "unmatched"}"></span>
+      </div>
+
+      <div class="keyword-status">
+        부처: ${escapeHtml(getText(card.부처))}<br>
+        매칭 공고: ${escapeHtml(card.매칭건수 || 0)}건
+      </div>
+    </div>
+  `).join("");
+
+  container.innerHTML = `
+    <div class="regular-card-wrap">
+      <button 
+        class="regular-arrow-btn"
+        onclick="moveRegularPage(-1)"
+        ${regularPage <= 1 ? "disabled" : ""}
+      >
+        ‹
+      </button>
+
+      <div class="keyword-cards">
+  ${cardsHtml}
+</div>
+
+      <button 
+        class="regular-arrow-btn"
+        onclick="moveRegularPage(1)"
+        ${regularPage >= totalPages ? "disabled" : ""}
+      >
+        ›
+      </button>
+    </div>
+
+    <div class="regular-page-info">
+      ${regularPage} / ${totalPages}
+    </div>
+  `;
+}
+
+    function moveRegularPage(direction) {
+      const totalPages = Math.max(1, Math.ceil(regularCardsAll.length / REGULAR_PAGE_SIZE));
+
+      regularPage += direction;
+
+      if (regularPage < 1) regularPage = 1;
+      if (regularPage > totalPages) regularPage = totalPages;
+
+      renderRegularCardsPaged();
+    }
+
+    function renderNoticeRows(notices) {
+      if (!notices || notices.length === 0) {
+        return `
+          <tr>
+            <td colspan="8" style="text-align:center; color:#64748b; padding:30px;">
+              표시할 공고가 없습니다.
+            </td>
+          </tr>
+        `;
+      }
+
+      return notices.map(n => {
+        const grade = escapeHtml(n.적합도등급 || "D");
+        const progressStatus = normalizeStatus(n.상태 || n.진행상태);
+        const applyStatus = n.접수상태표시 || n.접수상태 || "-";
+        const applyStatusClass = getApplyStatusClass(applyStatus);
+        const noticeId = escapeHtml(n.공고ID || "");
+
+        return `
+          <tr class="notice-row" data-notice-id="${noticeId}" onclick="goDetail(this.dataset.noticeId)">
+            <td class="col-grade">
+              <span class="grade-badge grade-${grade}">${grade}</span>
+            </td>
+
+            <td class="col-score">
+              ${escapeHtml(getText(n.적합도점수))}
+            </td>
+
+            <td class="col-status">
+              <span class="status-badge">${escapeHtml(progressStatus)}</span>
+            </td>
+
+            <td class="col-apply-status">
+              <span class="apply-status-badge ${applyStatusClass}">
+                ${escapeHtml(getText(applyStatus))}
+              </span>
+            </td>
+
+            <td class="col-title">
+              <b>${escapeHtml(getText(n.공고명))}</b>
+            </td>
+
+            <td class="col-ministry">
+              ${escapeHtml(getText(n.소관부처))}
+            </td>
+
+            <td class="col-date">
+              ${escapeHtml(getText(n.공고일))}
+            </td>
+
+            <td class="col-period">
+              ${escapeHtml(getText(n.신청기간))}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function setNoticeList(notices) {
+      CURRENT_NOTICE_LIST = sortNotices(notices || []);
+      CURRENT_PAGE = 1;
+      renderCurrentPage();
+    }
+
+    function renderCurrentPage() {
+      const total = CURRENT_NOTICE_LIST.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+      if (CURRENT_PAGE < 1) CURRENT_PAGE = 1;
+      if (CURRENT_PAGE > totalPages) CURRENT_PAGE = totalPages;
+
+      const start = (CURRENT_PAGE - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageItems = CURRENT_NOTICE_LIST.slice(start, end);
+
+      const tbody = document.getElementById("noticeTableBody");
+      if (tbody) {
+        tbody.innerHTML = renderNoticeRows(pageItems);
+      }
+
+      const visibleCount = document.getElementById("visibleCount");
+      if (visibleCount) {
+        visibleCount.textContent = total;
+      }
+
+      const pageInfo = document.getElementById("pageInfo");
+      if (pageInfo) {
+        pageInfo.textContent = `${CURRENT_PAGE} / ${totalPages}`;
+      }
+
+      const prevBtn = document.getElementById("prevPageBtn");
+      const nextBtn = document.getElementById("nextPageBtn");
+
+      if (prevBtn) {
+        prevBtn.disabled = CURRENT_PAGE <= 1;
+      }
+
+      if (nextBtn) {
+        nextBtn.disabled = CURRENT_PAGE >= totalPages;
+      }
+    }
+
+    function changePage(direction) {
+      CURRENT_PAGE += direction;
+      renderCurrentPage();
+    }
+
+    function applyFilter() {
+      const notices = window.__ALL_NOTICES__ || [];
+
+      const region = document.getElementById("regionFilter").value;
+      const ministry = document.getElementById("ministryFilter").value;
+      const status = document.getElementById("statusFilter").value;
+      const grade = document.getElementById("gradeFilter").value;
+
+      const filtered = notices.filter(n => {
+        const title = String(n.공고명 || "");
+        const ministryText = String(n.소관부처 || "");
+        const agencyText = String(n.수행기관 || "");
+        const targetText = String(n.지원대상 || "");
+        const contentText = String(n.지원내용 || "");
+        const statusText = normalizeStatus(n.진행상태 || n.상태);
+        const gradeText = String(n.적합도등급 || "");
+
+        const regionSearchText = [
+          title,
+          ministryText,
+          agencyText,
+          targetText,
+          contentText
+        ].join(" ");
+
+        if (region && !regionSearchText.includes(region)) return false;
+        if (ministry && !ministryText.includes(ministry)) return false;
+        if (status && statusText !== status) return false;
+        if (grade && gradeText !== grade) return false;
+
+        return true;
+      });
+
+      setNoticeList(filtered);
+    }
+
+    function resetFilter() {
+      const notices = window.__ALL_NOTICES__ || [];
+
+      const regionEl = document.getElementById("regionFilter");
+      const ministryEl = document.getElementById("ministryFilter");
+      const statusEl = document.getElementById("statusFilter");
+      const gradeEl = document.getElementById("gradeFilter");
+
+      if (regionEl) regionEl.value = "";
+      if (ministryEl) ministryEl.value = "";
+      if (statusEl) statusEl.value = "";
+      if (gradeEl) gradeEl.value = "";
+
+      CURRENT_SORT = "score_desc";
+
+      setNoticeList(notices);
+    }
+
+    function filterByRegularKeyword(title, pattern) {
+      const notices = window.__ALL_NOTICES__ || [];
+
+      const keywordText = String(pattern || title || "");
+      const keywords = keywordText
+        .split("|")
+        .map(v => v.trim())
+        .filter(Boolean);
+
+      const filtered = notices.filter(n => {
+        const targetText = [
+          n.공고명,
+          n.소관부처,
+          n.수행기관,
+          n.지원대상,
+          n.지원내용,
+          n.매칭키워드,
+          n.정기공고그룹,
+          n.첨부파일,
+          n.비고
+        ].join(" ");
+
+        if (title && String(n.공고명 || "").includes(title)) return true;
+
+        return keywords.some(k => k && targetText.includes(k));
+      });
+
+      setNoticeList(filtered);
+    }
+
+    function renderDetail(data) {
+      document.getElementById("pageTitle").textContent = "고객지원사업 - 신규지원사업 공고 상세";
+
+      if (!data) {
+        document.getElementById("app").className = "";
+        document.getElementById("app").innerHTML = `
+          <div class="empty-box">공고를 찾을 수 없습니다.</div>
+        `;
+        return;
+      }
+
+      CURRENT_DETAIL_NOTICE = data;
+
+      const matchKeywords = data.매칭키워드 || "매칭 키워드 없음";
+      const grade = data.적합도등급 || "-";
+      const score = data.적합도점수 || "-";
+
+      const noticeDocumentAttachment = getNoticeDocumentAttachment(data);
+
+      const originButton = data.상세링크
+        ? `<button class="origin-btn" onclick="window.open('${escapeJs(data.상세링크)}', '_blank')">
+            원본 공고문 바로 보기 ↗
+          </button>`
+        : `<button class="origin-btn" disabled>
+            원본 링크 없음
+          </button>`;
+
+      const downloadButton = noticeDocumentAttachment.name
+        ? `<button
+              class="${isValidAttachmentUrl(noticeDocumentAttachment.url) ? "download-origin-btn" : "download-origin-btn disabled"}"
+              onclick="downloadAttachment('${escapeJs(noticeDocumentAttachment.url)}', '${escapeJs(noticeDocumentAttachment.name)}')"
+            >
+              공고문 다운로드
+          </button>`
+        : `<button
+              class="download-origin-btn disabled"
+              onclick="downloadAttachment('', '')"
+            >
+              공고문 다운로드
+          </button>`;
+
+      const driveSaveButton = hasValidNoticeDocumentAttachmentUrl(data.첨부파일)
+        ? `<button
+              id="driveSaveBtn"
+              class="drive-save-btn"
+              onclick="saveAttachmentsToDrive()"
+            >
+              공고문 Drive 저장
+          </button>`
+        : `<button
+              id="driveSaveBtn"
+              class="drive-save-btn disabled"
+              onclick="saveAttachmentsToDrive()"
+            >
+              공고문 Drive 저장
+          </button>`;
+
+      const attachmentBox = renderAttachmentBox(data.첨부파일);
+
+      document.getElementById("app").className = "";
+      document.getElementById("app").innerHTML = `
+        <div class="top-card">
+          <button class="back-btn" onclick="goList()">← 사업 목록</button>
+
+          <div>
+            <span class="badge">${escapeHtml(getText(data.출처))}</span>
+            <span class="badge gray">${escapeHtml(getText(data.소관부처))}</span>
+          </div>
+
+          <div class="notice-title">${escapeHtml(getText(data.공고명))}</div>
+
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            ${originButton}
+            ${downloadButton}
+            ${driveSaveButton}
+          </div>
+        </div>
+
+        <div class="ai-box">
+          <div class="ai-title">✦ AI 적합도 분석</div>
+
+          <div>
+            <b>적합도 등급:</b> ${escapeHtml(getText(grade))}
+            &nbsp;&nbsp; <b>적합도 점수:</b> ${escapeHtml(getText(score))}점
+          </div>
+
+          <div style="margin-top:8px;">
+            <b>매칭 키워드:</b> ${escapeHtml(getText(matchKeywords))}
+          </div>
+
+          <div style="margin-top:8px;">
+            <b>정기공고 여부:</b> ${escapeHtml(getText(data.정기공고여부 || "N"))}
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <div class="info-card">
+            <div class="section-title">핵심 요약 정보</div>
+
+            <div class="row">
+              <div class="label">공고일</div>
+              <div class="value">${escapeHtml(getText(data.공고일))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">마감일</div>
+              <div class="value">${escapeHtml(getText(data.마감일))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">접수 기간</div>
+              <div class="value">${escapeHtml(getText(data.신청기간))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">접수 상태</div>
+              <div class="value">${escapeHtml(getText(data.접수상태표시 || data.접수상태))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">진행 상태</div>
+              <div class="value">${escapeHtml(getText(data.진행상태))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">수행기관</div>
+              <div class="value">${escapeHtml(getText(data.수행기관))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">지원 대상</div>
+              <div class="value">${escapeHtml(getText(data.지원대상))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">지원 내용</div>
+              <div class="value">${escapeHtml(getText(data.지원내용))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">접수 방법</div>
+              <div class="value">${escapeHtml(getText(data.접수처 || "공고문 확인"))}</div>
+            </div>
+
+            <div class="row">
+              <div class="label">문의처</div>
+              <div class="value">${escapeHtml(getText(data.문의처))}</div>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="section-title">진행 상태 변경</div>
+
+            <div style="font-size:13px; color:#64748b; line-height:1.5; margin-bottom:14px;">
+              캘린더 등록, 미진행, 진행확정 중 하나를 선택하면 공고의 진행상태가 변경됩니다.
+            </div>
+
+            <button class="status-btn review" onclick="changeStatus('검토요청')">캘린더 등록</button>
+            <button class="status-btn drop" onclick="changeStatus('미진행')">미진행</button>
+            <button class="status-btn confirm" onclick="changeStatus('진행확정')">진행확정</button>
+            <button class="status-btn none" onclick="changeStatus('상태 미선택')">상태 미선택</button>
+          </div>
+        </div>
+
+        ${attachmentBox}
+
+        ${renderNoticePreviewBox(data)}
+      `;
+    }
+
+    function changeStatus(status) {
+      const currentNoticeId =
+        (CURRENT_DETAIL_NOTICE && CURRENT_DETAIL_NOTICE["공고ID"])
+          ? CURRENT_DETAIL_NOTICE["공고ID"]
+          : NOTICE_ID;
+
+      if (!currentNoticeId) {
+        alert("공고ID가 없어 상태를 변경할 수 없습니다.");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(result => {
+          const displayStatus = status === "검토요청" ? "캘린더 등록" : status;
+          let message = "'" + displayStatus + "' 처리가 완료되었습니다.";
+
+          if (status === "검토요청" || status === "진행확정") {
+            if (result && result.calendar) {
+              if (result.calendar.created) {
+                message += "\n\n구글 캘린더에 접수기간 일정이 등록되었습니다.";
+              } else {
+                message += "\n\n구글 캘린더에 이미 등록된 일정이 있어 중복 등록하지 않았습니다.";
+              }
+            } else {
+              message += "\n\n캘린더 등록 결과를 확인하지 못했습니다.";
+            }
+          }
+
+          alert(message);
+
+          google.script.run
+            .withSuccessHandler(data => {
+              LAST_LIST_PAYLOAD = null;
+              renderDetail(data);
+            })
+            .withFailureHandler(err => {
+              renderError(err.message);
+            })
+            .getNoticeDetail(currentNoticeId);
+        })
+        .withFailureHandler(err => {
+          alert("상태 변경 실패: " + err.message);
+        })
+        .updateNoticeStatus(currentNoticeId, status, "박나연");
+    }
+
+    function renderError(message) {
+      document.getElementById("app").className = "";
+      document.getElementById("app").innerHTML = `
+        <div class="empty-box">
+          불러오기 실패<br><br>
+          ${escapeHtml(message)}
+        </div>
+      `;
+    }
+
+    function getNoticeIdFromUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (!id || id === "undefined" || id === "null") {
+      return "";
+    }
+
+    return id.trim();
+  } catch (e) {
+    return "";
+  }
+}
+
+window.addEventListener("popstate", function(event) {
+    const noticeId = getNoticeIdFromUrl();
+
+    document.getElementById("app").className = "loading";
+
+    if (noticeId) {
+      document.getElementById("app").innerHTML = "상세 정보를 불러오는 중...";
+
+      google.script.run
+        .withSuccessHandler(data => {
+          if (!data) {
+            renderError("공고를 찾을 수 없습니다.");
+            return;
+          }
+
+          renderDetail(data);
+        })
+        .withFailureHandler(err => {
+          renderError(err.message);
+        })
+        .getNoticeDetail(noticeId);
+
+      return;
+    }
+
+    document.getElementById("app").innerHTML = "불러오는 중...";
+
+    if (LAST_LIST_PAYLOAD) {
+      renderList(LAST_LIST_PAYLOAD);
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(renderList)
+      .withFailureHandler(err => {
+        renderError(err.message);
+      })
+      .getNoticeList();
+  });
+
+    const INITIAL_NOTICE_ID = getNoticeIdFromUrl() || String(NOTICE_ID || "").trim();
+
+    if (INITIAL_NOTICE_ID && INITIAL_NOTICE_ID !== "undefined" && INITIAL_NOTICE_ID !== "null") {
+      google.script.run
+        .withSuccessHandler(renderDetail)
+        .withFailureHandler(err => {
+          renderError(err.message);
+        })
+        .getNoticeDetail(INITIAL_NOTICE_ID);
+    } else {
+      google.script.run
+        .withSuccessHandler(renderList)
+        .withFailureHandler(err => {
+          renderError(err.message);
+        })
+        .getNoticeList();
+    }
+  </script>
+</body>
+</html>
